@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:latest
+    env_file:
+      - postgres.env
+    volumes:
+      - C:\Users\codyh\OneDrive\Documents\Development\fafsaform\server\dbInit:/docker-entrypoint-initdb.d
+    networks:
+      - initexample
+
+  metabase:
+    image: metabase/metabase:latest
+    depends_on:
+      - postgres
+    ports:
+      - 3000:3000
+    networks:
+      - initexample
+
+networks:
+  initexample:
+    driver: bridge
