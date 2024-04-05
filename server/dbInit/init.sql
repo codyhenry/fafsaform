@@ -7,7 +7,9 @@ CREATE TABLE accounts
     account_username VARCHAR(50) NOT NULL,
     account_password  VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    phone VARCHAR(11) NOT NULL
+    phone VARCHAR(11) NOT NULL,
+    is_deleted BOOLEAN NOT NULL,
+    is_graduated BOOLEAN NOT NULL
 );
 -- this will not reference anything 
 CREATE TABLE fafsas
