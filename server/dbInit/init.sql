@@ -1,14 +1,36 @@
 --- Create a table for the database
 
 -- This table will be moved to firebase
-CREATE TABLE accounts
+CREATE TABLE account_types
 (
+    id SERIAL PRIMARY KEY,
+    account_type VARCHAR(20) NOT NULL UNIQUE CHECK (account_type IN ('admin', 'advisor', 'customer'))
+);
+CREATE TABLE accounts(
     id SERIAL PRIMARY KEY,
     account_username VARCHAR(50) NOT NULL,
     account_password  VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(11) NOT NULL,
-    is_deleted BOOLEAN NOT NULL,
+    account_types_id INT NOT NULL REFERENCES account_types ON DELETE RESTRICT,
+    is_verified BOOLEAN NOT NULL,
+    is_active BOOLEAN NOT NULL
+);
+CREATE TABLE admin_accounts(
+    account_id INT NOT NULL REFERENCES accounts ON DELETE CASCADE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    write_access BOOLEAN NOT NULL
+);
+CREATE TABLE advisor_accounts(
+    account_id INT NOT NULL REFERENCES accounts ON DELETE CASCADE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    address_state VARCHAR(50)
+);
+CREATE TABLE customer_accounts
+(
+    account_id INT NOT NULL REFERENCES accounts ON DELETE CASCADE,
     is_graduated BOOLEAN NOT NULL
 );
 -- this will not reference anything 
@@ -23,6 +45,21 @@ CREATE TABLE fafsas
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE review_forms 
+(
+    id SERIAL PRIMARY KEY,
+    fafsa_id INT NOT NULL REFERENCES fafsas ON DELETE CASCADE,
+    form_link TEXT NOT NULL,
+    change_request TEXT
+    has_confirmation BOOLEAN NOT NULL,
+)
+CREATE TABLE information_request
+(
+    id SERIAL PRIMARY KEY,
+    fafsa_id INT NOT NULL REFERENCES fafsas ON DELETE CASCADE,
+    requested_information TEXT NOT NULL,
+    response TEXT NOT NULL,
+)
 CREATE TABLE user_types
 (
     id SERIAL PRIMARY KEY,
